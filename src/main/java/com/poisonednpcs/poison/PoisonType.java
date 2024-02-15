@@ -17,6 +17,7 @@ public enum PoisonType {
     MELEE(true, MELEE_POISON_PROGRESSION, Pattern.compile("\\(p\\)$")),
     MELEE_PLUS(true, MELEE_POISON_PLUS_PROGRESSION, Pattern.compile("\\(p\\+\\)$")),
     MELEE_PLUS_PLUS(true, MELEE_POISON_PLUS_PLUS_PROGRESSION, Pattern.compile("\\(p\\+\\+\\)$")),
+    KARAMBWAN(true, MELEE_POISON_PLUS_PLUS_PROGRESSION, Pattern.compile("\\(kp\\)$")),
     ;
 
     private final boolean isMelee;

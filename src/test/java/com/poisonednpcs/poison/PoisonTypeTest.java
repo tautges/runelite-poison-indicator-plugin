@@ -101,4 +101,31 @@ public class PoisonTypeTest extends TestCase {
         }
     }
 
+    public void testKarambwanRegexMatches() {
+        List<String> expectedMatches = ImmutableList.of(
+                "Bronze spear(kp)",
+                "Rune spear(kp)",
+                "Rune hasta(kp)",
+                "Dragon hasta(kp)");
+
+        for (String expectedMatch : expectedMatches) {
+            assertTrue(String.format("expected match on %s", expectedMatch),
+                    PoisonType.KARAMBWAN.getWeaponRegex().matcher(expectedMatch).find());
+        }
+
+        List<String> expectedMisses = ImmutableList.of(
+                "Bronze spear",
+                "Bronze spear(p)",
+                "Iron dagger(p)",
+                "Rune dagger(p+)",
+                "Iron arrow(p++)",
+                "Rune spear",
+                "Dragon hasta");
+
+        for (String expectedMiss : expectedMisses) {
+            assertFalse(String.format("expected miss on %s", expectedMiss),
+                    PoisonType.KARAMBWAN.getWeaponRegex().matcher(expectedMiss).find());
+        }
+    }
+
 }

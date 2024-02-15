@@ -110,6 +110,8 @@ public class PoisonTracker {
         // else we don't know the weapon that caused the poison, and we have to guess
         // RIGHT NOW, WE ALWAYS GUESS MELEE
         for (PoisonType poisonType : PoisonType.onlyMelee()) {
+            // TODO: there's a danger here that we could mis-identify the poison type because (p++) and (kp) have the
+            //  same progression; as is, that won't hurt anything, but if the poison type is displayed, it will be wrong
             if (poisonHit.getHitsplat().getAmount() == poisonType.maxHit()) {
                 logFn.accept(String.format("Poison type detected from max hit: %s", poisonType));
                 return poisonType;
