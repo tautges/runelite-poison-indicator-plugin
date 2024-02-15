@@ -124,8 +124,8 @@ public class PoisonedNPCsPlugin extends Plugin {
 				return;
 		}
 
-		// if we don't already have a timer active for this opponent, set one up now that we're interested
-		if (!isActiveTimer) {
+		// if a timer wasn't active before but should be now, set one up now that we're interested
+		if (!isActiveTimer && opponent.getHealthStatus().isActive()) {
 			PoisonWatchTimer poisonWatchTimer = new PoisonWatchTimer(opponent, itemManager.getImage(ItemID.POISON), this);
 			infoBoxManager.addInfoBox(poisonWatchTimer);
 		}
