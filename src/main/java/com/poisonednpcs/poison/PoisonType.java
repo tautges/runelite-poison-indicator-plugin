@@ -18,6 +18,8 @@ public enum PoisonType {
     MELEE_PLUS(true, MELEE_POISON_PLUS_PROGRESSION, Pattern.compile("\\(p\\+\\)$")),
     MELEE_PLUS_PLUS(true, MELEE_POISON_PLUS_PLUS_PROGRESSION, Pattern.compile("\\(p\\+\\+\\)$")),
     KARAMBWAN(true, MELEE_POISON_PLUS_PLUS_PROGRESSION, Pattern.compile("\\(kp\\)$")),
+    // Despite being ranged, enchanted emerald bolts use a progression equivalent to melee poison+ w/an initial 5
+    EMERALD_BOLTS_E(false, MELEE_POISON_PLUS_PROGRESSION, Pattern.compile("Emerald bolts \\(e\\)"))
     ;
 
     private final boolean isMelee;

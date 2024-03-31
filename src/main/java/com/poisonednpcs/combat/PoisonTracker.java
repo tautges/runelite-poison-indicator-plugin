@@ -23,16 +23,16 @@ public class PoisonTracker {
     @VisibleForTesting
     static BiFunction<Optional<Hit>, Hit, PoisonType> getPoisonTypeFromHits = PoisonTracker::getPoisonType;
 
-    private final Function<Hit, Optional<Hit>> getPoisiningHitFn;
+    private final Function<Hit, Optional<Hit>> getPoisoningHitFn;
 
     private Optional<PoisonState> current;
 
     /**
-     * @param getPoisiningHitFn function which takes the first poison hit of the sequence and attempts to return the
+     * @param getPoisoningHitFn function which takes the first poison hit of the sequence and attempts to return the
      *                          hit which applied the poison.
      */
-    public PoisonTracker(Function<Hit, Optional<Hit>> getPoisiningHitFn) {
-        this.getPoisiningHitFn = getPoisiningHitFn;
+    public PoisonTracker(Function<Hit, Optional<Hit>> getPoisoningHitFn) {
+        this.getPoisoningHitFn = getPoisoningHitFn;
         this.current = Optional.empty();
     }
 
@@ -88,7 +88,7 @@ public class PoisonTracker {
     }
 
     private PoisonState newPoisonSequence(Hit poisonHit) {
-        Optional<Hit> hitWhichCausedPoisoning = getPoisiningHitFn.apply(poisonHit);
+        Optional<Hit> hitWhichCausedPoisoning = getPoisoningHitFn.apply(poisonHit);
         PoisonType poisonType = getPoisonTypeFromHits.apply(hitWhichCausedPoisoning, poisonHit);
         return new PoisonState(poisonType);
     }

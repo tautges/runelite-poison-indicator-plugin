@@ -175,11 +175,16 @@ public class PoisonedNPCsPlugin extends Plugin {
 			}
 		}
 
-		int ammoId = client.getLocalPlayer().getPlayerComposition().getEquipmentId(KitType.ARMS);
-		ItemComposition ammoComposition = itemManager.getItemComposition(ammoId);
-		for (PoisonType type : ArrayUtils.filter(PoisonType.values(), Predicates.not(PoisonType::isMelee))) {
-			if (type.getWeaponRegex().matcher(ammoComposition.getName()).find()) {
-				return new Weapon(weaponId, Optional.of(type));
+		ItemContainer itemContainer = client.getItemContainer(InventoryID.EQUIPMENT);
+		Item[] items = itemContainer != null ? itemContainer.getItems() : new Item[0];
+
+		if (items.length > EquipmentInventorySlot.AMMO.getSlotIdx()) {
+			final Item ammo = items[EquipmentInventorySlot.AMMO.getSlotIdx()];
+			final ItemComposition ammoComposition = itemManager.getItemComposition(ammo.getId());
+			for (PoisonType type : ArrayUtils.filter(PoisonType.values(), Predicates.not(PoisonType::isMelee))) {
+				if (type.getWeaponRegex().matcher(ammoComposition.getName()).find()) {
+					return new Weapon(weaponId, Optional.of(type));
+				}
 			}
 		}
 

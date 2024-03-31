@@ -128,4 +128,29 @@ public class PoisonTypeTest extends TestCase {
         }
     }
 
+    public void testEmeraldBoltsERegexMatches() {
+        List<String> expectedMatches = ImmutableList.of(
+                "Emerald bolts (e)");
+
+
+        for (String expectedMatch : expectedMatches) {
+            assertTrue(String.format("expected match on %s", expectedMatch),
+                    PoisonType.EMERALD_BOLTS_E.getWeaponRegex().matcher(expectedMatch).find());
+        }
+
+        List<String> expectedMisses = ImmutableList.of(
+                "Bronze bolts (e)",
+                "Emerald bolts(e)",
+                "Emerald bolts (e",
+                "Emerald bolts e)",
+                "Ruby bolts (e)",
+                "Diamond bolts (e)",
+                "ahhhhhhhhhhhhhh");
+
+        for (String expectedMiss : expectedMisses) {
+            assertFalse(String.format("expected miss on %s", expectedMiss),
+                    PoisonType.EMERALD_BOLTS_E.getWeaponRegex().matcher(expectedMiss).find());
+        }
+    }
+
 }
