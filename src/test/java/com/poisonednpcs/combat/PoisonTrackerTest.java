@@ -37,6 +37,7 @@ public class PoisonTrackerTest extends TestCase {
         assertTrue(tracker.getPoisonStatus().isPresent());
         assertFalse(tracker.getPoisonStatus().get().isAmbiguous());
         assertTrue(tracker.isPoisoned());
+        assertNotNull(tracker.getPoisonStatus().get().getLastSplat());
     }
 
     public void testRegisterRestartSplat() {
@@ -59,6 +60,11 @@ public class PoisonTrackerTest extends TestCase {
         assertTrue(tracker.getPoisonStatus().isPresent());
         assertFalse(tracker.getPoisonStatus().get().isAmbiguous());
         assertTrue(tracker.isPoisoned());
+
+        // Ensure that a sequence which is reset is properly configured to handle the next splat. This just means that
+        // once a sequence is reset, the next splat should function properly. A previous bug resulted in the timestamp
+        // of the resetting splat not being marked in the new sequence, which threw NPEs.
+        assertNotNull(tracker.getPoisonStatus().get().getLastSplat());
     }
 
     public void testRegisterAmbiguousSplat() {
@@ -81,6 +87,7 @@ public class PoisonTrackerTest extends TestCase {
         assertTrue(tracker.getPoisonStatus().isPresent());
         assertTrue(tracker.getPoisonStatus().get().isAmbiguous());
         assertTrue(tracker.isPoisoned());
+        assertNotNull(tracker.getPoisonStatus().get().getLastSplat());
     }
 
     public void testRegisterFullSequence() {
