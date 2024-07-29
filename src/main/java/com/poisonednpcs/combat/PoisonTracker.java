@@ -46,9 +46,6 @@ public class PoisonTracker {
             current = Optional.of(newPoisonSequence(hit));
         }
 
-        // register that the poison splat happened -- this is intentional even though it returns no value
-        current.get().splat();
-
         int amount = hit.getHitsplat().getAmount();
         int expectedNextDamage = current.get().nextExpectedDamage();
         // TODO: any way to do this sequence without if statements?
@@ -68,6 +65,10 @@ public class PoisonTracker {
             current.get().nextStep();
             current.get().markAmbiguous();
         }
+
+        // Register that the poison splat happened. We do this AFTER the above sequence checks to make sure that
+        // any reset sequence is properly splatted as well.
+        current.get().splat();
 
         // if we just applied our last piece of poison damage, kill the sequence altogether
         if (current.get().isFinished()) {
