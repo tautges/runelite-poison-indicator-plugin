@@ -38,6 +38,10 @@ public class HitTracker {
         return isActive.get() && !hits.isEmpty();
     }
 
+    public int getNumHits() {
+        return hits.size();
+    }
+
     synchronized Optional<Hit> getClosestTrackedHitTo(Instant instant, Duration within) {
         Optional<Hit> past = Optional.ofNullable(pastHit);
         Optional<Hit> next = hits.isEmpty() ? Optional.empty() : Optional.of(hits.peek());

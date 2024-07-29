@@ -1,6 +1,7 @@
 package com.poisonednpcs.health;
 
 import com.poisonednpcs.combat.HealthStatus;
+import com.poisonednpcs.combat.HitTracker;
 import com.poisonednpcs.mocks.MockNPC;
 import com.poisonednpcs.npcs.Opponent;
 import com.poisonednpcs.npcs.OpponentCuller;
@@ -61,8 +62,12 @@ public class PoisonWatchTimerTest extends TestCase {
         MockNPC mockNPC1 = MockNPC.newSetup().getIndexFn(() -> id1).get();
         MockNPC mockNPC2 = MockNPC.newSetup().getIndexFn(() -> id2).get();
 
+        HitTracker tracker = Mockito.mock(HitTracker.class);
+        Mockito.when(tracker.getNumHits()).thenReturn(1);
+
         HealthStatus status = Mockito.mock(HealthStatus.class);
         Mockito.when(status.isActive()).thenReturn(true);
+        Mockito.when(status.getHitTracker()).thenReturn(tracker);
 
         Opponent opponent1 = Mockito.mock(Opponent.class);
         Mockito.when(opponent1.getNPC()).thenReturn(mockNPC1);

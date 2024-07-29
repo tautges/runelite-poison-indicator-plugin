@@ -1,5 +1,6 @@
 package com.poisonednpcs.health;
 
+import com.poisonednpcs.combat.HitTracker;
 import com.poisonednpcs.combat.PoisonState;
 import com.poisonednpcs.npcs.NPCUtils;
 import com.poisonednpcs.npcs.Opponent;
@@ -70,35 +71,43 @@ public class PoisonWatchTimer extends InfoBox {
      */
     public static Predicate<InfoBox> updateTooltip(Opponent opponent) {
         return infoBox -> {
-            if (!(infoBox instanceof PoisonWatchTimer)) {
-                // Not a thing we need to update, leave early
-                return false;
-            }
-            PoisonWatchTimer poisonWatchTimer = (PoisonWatchTimer) infoBox;
-            if (!poisonWatchTimer.isForOpponent(opponent)) {
-                // We don't care about this timer, as it's not for the correct opponent, skip anything else
-                return false;
-            }
-
-            if (opponent.getHealthStatus().isPoisoned()) {
-                PoisonState poisonState = opponent.getHealthStatus().getPoisonTracker().getPoisonStatus().get();
-                int remainingHealth = opponent.getRemainingHealth();
-
-                poisonWatchTimer.setTooltip(new Multiline()
-                        .append(String.format("%s is poisoned", opponent.getNPC().getName()))
-                        .append(String.format("Next poison damage: %d", poisonState.nextExpectedDamage()))
-                        .append(String.format("Remaining poison damage: %d", poisonState.getDamageRemaining()))
-                        .append(String.format("Remaining opponent health: %s", remainingHealth < 0 ? "??" : String.format("~%d", remainingHealth)))
-                        .toString());
-            } else if (opponent.getHealthStatus().isActive()) {
-                // This means we're getting hit but not poisoned, show the next poison opportunity
-                poisonWatchTimer.setTooltip(
-                        String.format("Next opportunity for %s to be poisoned", opponent.getNPC().getName()));
-            }
-
+            updateTooltip(infoBox, opponent);
             // THIS MUST ALWAYS BE FALSE! We are intentionally preventing the info box from being removed through here.
             return false;
         };
+    }
+
+    private static void updateTooltip(InfoBox infoBox, Opponent opponent) {
+        if (!(infoBox instanceof PoisonWatchTimer)) {
+            // Not a thing we need to update, leave early
+            return;
+        }
+        PoisonWatchTimer poisonWatchTimer = (PoisonWatchTimer) infoBox;
+        if (!poisonWatchTimer.isForOpponent(opponent)) {
+            // We don't care about this timer, as it's not for the correct opponent, skip anything else
+            return;
+        }
+
+        if (opponent.getHealthStatus().isPoisoned()) {
+            PoisonState poisonState = opponent.getHealthStatus().getPoisonTracker().getPoisonStatus().get();
+            int remainingHealth = opponent.getRemainingHealth();
+
+            poisonWatchTimer.setTooltip(new Multiline()
+                .append(String.format("%s is poisoned", opponent.getNPC().getName()))
+                .append(String.format("Next poison damage: %d", poisonState.nextExpectedDamage()))
+                .append(String.format("Remaining poison damage: %d", poisonState.getDamageRemaining()))
+                .append(String.format("Remaining opponent health: %s", remainingHealth < 0 ? "??" : String.format("~%d", remainingHealth)))
+                .toString());
+        } else if (opponent.getHealthStatus().isActive()) {
+            HitTracker hitTracker = opponent.getHealthStatus().getHitTracker();
+            int numHits = hitTracker.getNumHits();
+
+            // This means we're getting hit but not poisoned, show the next poison opportunity
+            poisonWatchTimer.setTooltip(new Multiline()
+                .append(String.format("Next opportunity for %s to be poisoned.", opponent.getNPC().getName()))
+                .appendIf(numHits > 0, () -> String.format("%d hit(s) on %s are pending.", numHits, opponent.getNPC().getName()))
+                .toString());
+        }
     }
 
     public static Predicate<InfoBox> cullOpponents(OpponentCuller opponentCuller) {

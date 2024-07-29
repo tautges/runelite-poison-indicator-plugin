@@ -72,12 +72,14 @@ public class PoisonStateTest extends TestCase {
         assertEquals(0, expectedDamageRemaining);
     }
 
-    public void testSplat() {
+    public void testSplat() throws InterruptedException {
         final PoisonType type = PoisonType.MELEE;
         PoisonState state = new PoisonState(type);
         assertNull(state.getLastSplat());
         Instant before = Instant.now();
+        Thread.sleep(5L);
         state.splat();
+        Thread.sleep(5L);
         Instant after = Instant.now();
 
         Instant lastSplat = state.getLastSplat();
