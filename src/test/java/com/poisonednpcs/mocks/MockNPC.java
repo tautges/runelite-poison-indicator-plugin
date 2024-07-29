@@ -322,6 +322,11 @@ public class MockNPC implements NPC {
     }
 
     @Override
+    public WorldView getWorldView() {
+        return null;
+    }
+
+    @Override
     public int getCombatLevel() {
         return 0;
     }
@@ -366,11 +371,6 @@ public class MockNPC implements NPC {
 
     @Override
     public void setModelHeight(int i) {
-
-    }
-
-    @Override
-    public void draw(int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7, long l) {
 
     }
 
